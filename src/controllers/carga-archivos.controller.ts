@@ -1,26 +1,41 @@
-
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {
-  HttpErrors, param, post,
+  HttpErrors,
+  param,
+  post,
   Request,
   requestBody,
   Response,
-  RestBindings
+  RestBindings,
 } from '@loopback/rest';
 import multer from 'multer';
 import path from 'path';
 import {Keys as llaves} from '../config/keys';
-import {ProponenteTrabajo} from '../models';
-import {ProponenteTrabajoRepository} from '../repositories';
+import {
+  ProponenteTrabajo,
+  ResultadoEvaluacion,
+  Solicitud,
+  TipoSolicitud,
+} from '../models';
+import {
+  ProponenteTrabajoRepository,
+  ResultadoEvaluacionRepository,
+  SolicitudRepository,
+  TipoSolicitudRepository,
+} from '../repositories';
 
 export class CargaArchivosController {
   constructor(
     @repository(ProponenteTrabajoRepository)
-    private fotoRepository: ProponenteTrabajoRepository
-  ) { }
-
-
+    private fotoProponenteRepository: ProponenteTrabajoRepository,
+    @repository(TipoSolicitudRepository)
+    private documentTipoSolicitudRepository: TipoSolicitudRepository,
+    @repository(SolicitudRepository)
+    private documentSolicitudRepository: SolicitudRepository,
+    @repository(ResultadoEvaluacionRepository)
+    private documentResultadoEvaluacionRepository: ResultadoEvaluacionRepository,
+  ) {}
 
   /**
    *
@@ -44,17 +59,26 @@ export class CargaArchivosController {
   async cargarImagenDelProponenteTrabajo(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @requestBody.file() request: Request,
-    @param.path.number("id") id: number
+    @param.path.number('id') id: number,
   ): Promise<object | false> {
-    const rutaImagenProponenteTrabajo = path.join(__dirname, llaves.carpetaImagenProponenteTrabajo);
-    let res = await this.StoreFileToPath(rutaImagenProponenteTrabajo, llaves.nombreCampoImagenProponenteTrabajo, request, response, llaves.extensionesPermitidasIMG);
+    const rutaImagenProponenteTrabajo = path.join(
+      __dirname,
+      llaves.carpetaImagenProponenteTrabajo,
+    );
+    let res = await this.StoreFileToPath(
+      rutaImagenProponenteTrabajo,
+      llaves.nombreCampoImagenProponenteTrabajo,
+      request,
+      response,
+      llaves.extensionesPermitidasIMG,
+    );
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
         let foto = new ProponenteTrabajo();
-        foto.id = id
+        foto.id = id;
         foto.primer_nombre = nombre_archivo;
-        await this.fotoRepository.save(foto);
+        await this.fotoProponenteRepository.save(foto);
         return {filename: nombre_archivo};
       }
     }
@@ -66,7 +90,7 @@ export class CargaArchivosController {
    * @param response
    * @param request
    */
-  @post('/CargarDocumentoPersona', {
+  @post('/CargarDocumentoTipoSolicitud', {
     responses: {
       200: {
         content: {
@@ -76,26 +100,139 @@ export class CargaArchivosController {
             },
           },
         },
-        description: 'Función de carga de documentos de la persona.',
+        description: 'Función de carga de documentos del tipo de solicitud.',
       },
     },
   })
-  async DocumentosPersona(
+  async DocumentosTipoSolicitud(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @requestBody.file() request: Request,
+    @param.path.number('id') id: number,
   ): Promise<object | false> {
-    const rutaDocumentoPersona = path.join(__dirname, llaves.carpetaDocumentoPersona);
-    let res = await this.StoreFileToPath(rutaDocumentoPersona, llaves.nombreCampoDocumentoPersona, request, response, llaves.extensionesPermitidasDOC);
+    const rutaDocumentoTipoSolicitud = path.join(
+      __dirname,
+      llaves.carpetaDocumentoTipoSolicitud,
+    );
+    let res = await this.StoreFileToPath(
+      rutaDocumentoTipoSolicitud,
+      llaves.nombreCampoDocumento,
+      request,
+      response,
+      llaves.extensionesPermitidasDOC,
+    );
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
+        let formato = new TipoSolicitud();
+        formato.id = id;
+        formato.nombre = nombre_archivo;
+        await this.documentTipoSolicitudRepository.save(formato);
         return {filename: nombre_archivo};
       }
     }
     return res;
   }
 
-
+  /**
+   *
+   * @param response
+   * @param request
+   */
+  @post('/CargarDocumentoSolicitud', {
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+        description: 'Función de carga de documentos de solicitud.',
+      },
+    },
+  })
+  async DocumentosSolicitud(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @requestBody.file() request: Request,
+    @param.path.number('id') id: number,
+  ): Promise<object | false> {
+    const rutaDocumentoSolicitud = path.join(
+      __dirname,
+      llaves.carpetaDocumentoSolicitud,
+    );
+    let res = await this.StoreFileToPath(
+      rutaDocumentoSolicitud,
+      llaves.nombreCampoDocumento,
+      request,
+      response,
+      llaves.extensionesPermitidasDOCSolicitud,
+    );
+    if (res) {
+      const nombre_archivo = response.req?.file?.filename;
+      if (nombre_archivo) {
+        let comprimido = new Solicitud();
+        comprimido.id = id;
+        comprimido.fecha_radicacion = nombre_archivo;
+        await this.documentSolicitudRepository.save(comprimido);
+        return {filename: nombre_archivo};
+      }
+    }
+    return res;
+  }
+  /**
+   *
+   * @param response
+   * @param request
+   */
+  @post('/CargarDocumentoResultadoEvaluacion', {
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+        description:
+          'Función de carga de documentos del resultado de la evaluacion.',
+      },
+    },
+  })
+  async ResultadoEvaluacion(
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @requestBody.file() request: Request,
+    @param.path.number('id') id: number,
+  ): Promise<object | false> {
+    const rutaDocumentoResultadoEvaluacion = path.join(
+      __dirname,
+      llaves.carpetaDocumentoResultadoEvaluacion,
+    );
+    let res = await this.StoreFileToPath(
+      rutaDocumentoResultadoEvaluacion,
+      llaves.nombreCampoDocumento,
+      request,
+      response,
+      llaves.extensionesPermitidasDOCSolicitud,
+    );
+    if (res) {
+      const nombre_archivo = response.req?.file?.filename;
+      if (nombre_archivo) {
+        let documento = new ResultadoEvaluacion();
+        documento.id = id;
+        documento.resultado = nombre_archivo;
+        await this.documentResultadoEvaluacionRepository.save(documento);
+        return {filename: nombre_archivo};
+      }
+    }
+    return res;
+  }
+  /**
+   *
+   * @param response
+   * @param request
+   */
   /**
    * Return a config for multer storage
    * @param path
@@ -104,12 +241,12 @@ export class CargaArchivosController {
     var filename: string = '';
     const storage = multer.diskStorage({
       destination: function (req: any, file: any, cb: any) {
-        cb(null, path)
+        cb(null, path);
       },
       filename: function (req: any, file: any, cb: any) {
-        filename = `${Date.now()}-${file.originalname}`
+        filename = `${Date.now()}-${file.originalname}`;
         cb(null, filename);
-      }
+      },
     });
     return storage;
   }
@@ -120,7 +257,13 @@ export class CargaArchivosController {
    * @param request
    * @param response
    */
-  private StoreFileToPath(storePath: string, fieldname: string, request: Request, response: Response, acceptedExt: string[]): Promise<object> {
+  private StoreFileToPath(
+    storePath: string,
+    fieldname: string,
+    request: Request,
+    response: Response,
+    acceptedExt: string[],
+  ): Promise<object> {
     return new Promise<object>((resolve, reject) => {
       const storage = this.GetMulterStorageConfig(storePath);
       const upload = multer({
@@ -130,13 +273,14 @@ export class CargaArchivosController {
           if (acceptedExt.includes(ext)) {
             return callback(null, true);
           }
-          return callback(new HttpErrors[400]('El formato del archivo no es permitido.'));
+          return callback(
+            new HttpErrors[400]('El formato del archivo no es permitido.'),
+          );
         },
         limits: {
-          fileSize: llaves.tamMaxImagenProponenteTrabajo
-        }
-      },
-      ).single(fieldname);
+          fileSize: llaves.tamMaxImagenProponenteTrabajo,
+        },
+      }).single(fieldname);
       upload(request, response, (err: any) => {
         if (err) {
           reject(err);
@@ -145,5 +289,4 @@ export class CargaArchivosController {
       });
     });
   }
-
 }

@@ -19,3 +19,5 @@ export * from './tipo-vinculacion.model';
 export * from './usuario-roles.model';
 export * from './usuario.model';
 
+export * from './notificacion-correo.model';
+export * from './solicitud-proponente.model';

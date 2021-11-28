@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {ProponenteTrabajo} from './proponente-trabajo.model';
+import {SolicitudProponente} from './solicitud-proponente.model';
 
 @model({settings: {strict: false}})
 export class Solicitud extends Entity {
@@ -13,7 +15,7 @@ export class Solicitud extends Entity {
     type: 'number',
     required: true,
   })
-  id_proponente: number;
+  id_solicitud_proponente: number;
 
   @property({
     type: 'date',
@@ -27,6 +29,14 @@ export class Solicitud extends Entity {
   })
   nombre_trabajo: string;
 
+  @hasMany(() => ProponenteTrabajo, {
+    through: {
+      model: () => SolicitudProponente,
+      keyFrom: 'id_solicitud',
+      keyTo: 'id_proponente',
+    },
+  })
+  proponenteTrabajos: ProponenteTrabajo[];
   @property({
     type: 'number',
     required: true,

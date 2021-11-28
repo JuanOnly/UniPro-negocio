@@ -12,10 +12,8 @@ export * from './ping.controller';
 export * from './proponente-trabajo.controller';
 export * from './recordatorios.controller';
 export * from './resultado-evaluacion.controller';
-export * from './roles.controller';
+export * from './solicitud-proponente-trabajo.controller';
+export * from './solicitud-proponente.controller';
 export * from './tipo-comite.controller';
 export * from './tipo-solicitud.controller';
 export * from './tipo-vinculacion.controller';
-export * from './usuario-roles.controller';
-export * from './usuario.controller';
-

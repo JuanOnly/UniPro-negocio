@@ -47,10 +47,10 @@ export class ProponenteTrabajo extends Entity {
   numero_celular?: string;
 
   @property({
-    type: 'string',
+    type: 'number',
     required: true,
   })
-  id_tipo_vinculacion: string;
+  id_tipo_vinculacion: number;
 
   @property({
     type: 'string',
@@ -72,4 +72,5 @@ export interface ProponenteTrabajoRelations {
   // describe navigational properties here
 }
 
-export type ProponenteTrabajoWithRelations = ProponenteTrabajo & ProponenteTrabajoRelations;
+export type ProponenteTrabajoWithRelations = ProponenteTrabajo &
+  ProponenteTrabajoRelations;
