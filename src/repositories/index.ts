@@ -15,3 +15,7 @@ export * from './solicitud.repository';
 export * from './tipo-comite.repository';
 export * from './tipo-solicitud.repository';
 export * from './tipo-vinculacion.repository';
+export * from './documento-resultado-solicitud.repository';
+export * from './documento-solicitud.repository';
+export * from './documento-tipo-solicitud.repository';
+export * from './foto-proponente-trabajo.repository';

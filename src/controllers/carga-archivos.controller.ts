@@ -13,28 +13,26 @@ import multer from 'multer';
 import path from 'path';
 import {Keys as llaves} from '../config/keys';
 import {
-  ProponenteTrabajo,
-  ResultadoEvaluacion,
-  Solicitud,
-  TipoSolicitud,
+  DocumentoResultadoSolicitud,
+  DocumentoSolicitud,
+  DocumentoTipoSolicitud,
+  FotoProponenteTrabajo,
 } from '../models';
 import {
-  ProponenteTrabajoRepository,
-  ResultadoEvaluacionRepository,
-  SolicitudRepository,
-  TipoSolicitudRepository,
+  DocumentoResultadoSolicitudRepository,
+  DocumentoSolicitudRepository,
 } from '../repositories';
 
 export class CargaArchivosController {
   constructor(
-    @repository(ProponenteTrabajoRepository)
-    private fotoProponenteRepository: ProponenteTrabajoRepository,
-    @repository(TipoSolicitudRepository)
-    private documentTipoSolicitudRepository: TipoSolicitudRepository,
-    @repository(SolicitudRepository)
-    private documentSolicitudRepository: SolicitudRepository,
-    @repository(ResultadoEvaluacionRepository)
-    private documentResultadoEvaluacionRepository: ResultadoEvaluacionRepository,
+    @repository(FotoProponenteTrabajo)
+    private fotoProponenteRepository: FotoProponenteTrabajo,
+    @repository(DocumentoTipoSolicitud)
+    private documentTipoSolicitudRepository: DocumentoTipoSolicitud,
+    @repository(DocumentoSolicitudRepository)
+    private documentSolicitudRepository: DocumentoSolicitudRepository,
+    @repository(DocumentoResultadoSolicitudRepository)
+    private documentResultadoEvaluacionRepository: DocumentoResultadoSolicitudRepository,
   ) {}
 
   /**
@@ -75,9 +73,9 @@ export class CargaArchivosController {
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
-        let foto = new ProponenteTrabajo();
+        let foto = new FotoProponenteTrabajo();
         foto.id = id;
-        foto.primer_nombre = nombre_archivo;
+        foto.nombre = nombre_archivo;
         await this.fotoProponenteRepository.save(foto);
         return {filename: nombre_archivo};
       }
@@ -123,10 +121,10 @@ export class CargaArchivosController {
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
-        let formato = new TipoSolicitud();
-        formato.id = id;
-        formato.nombre = nombre_archivo;
-        await this.documentTipoSolicitudRepository.save(formato);
+        let documento = new DocumentoTipoSolicitud();
+        documento.id = id;
+        documento.name = nombre_archivo;
+        //await this.documentTipoSolicitudRepository.save(documento);
         return {filename: nombre_archivo};
       }
     }
@@ -171,9 +169,9 @@ export class CargaArchivosController {
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
-        let comprimido = new Solicitud();
+        let comprimido = new DocumentoSolicitud();
         comprimido.id = id;
-        comprimido.fecha_radicacion = nombre_archivo;
+        comprimido.name = nombre_archivo;
         await this.documentSolicitudRepository.save(comprimido);
         return {filename: nombre_archivo};
       }
@@ -219,9 +217,9 @@ export class CargaArchivosController {
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
-        let documento = new ResultadoEvaluacion();
+        let documento = new DocumentoResultadoSolicitud();
         documento.id = id;
-        documento.resultado = nombre_archivo;
+        documento.name = nombre_archivo;
         await this.documentResultadoEvaluacionRepository.save(documento);
         return {filename: nombre_archivo};
       }

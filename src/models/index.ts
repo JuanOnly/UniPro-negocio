@@ -21,3 +21,7 @@ export * from './usuario.model';
 
 export * from './notificacion-correo.model';
 export * from './solicitud-proponente.model';
+export * from './foto-proponente-trabajo.model';
+export * from './documento-tipo-solicitud.model';
+export * from './documento-solicitud.model';
+export * from './documento-resultado-solicitud.model';
