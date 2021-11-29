@@ -17,3 +17,4 @@ export * from './solicitud-proponente.controller';
 export * from './tipo-comite.controller';
 export * from './tipo-solicitud.controller';
 export * from './tipo-vinculacion.controller';
+export * from './descargar-archivos.controller';
