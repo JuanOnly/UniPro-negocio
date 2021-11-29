@@ -24,9 +24,11 @@ export namespace Keys {
     '.XLSX',
   ];
   export const extensionesPermitidasDOCSolicitud: string[] = ['.RAR', '.ZIP'];
-  export const rol_administrador = '615b1ecff6889450d04becb5';
+  export const rol_administrador = '619fc4c512bc4f3b08f98900';
   export const rol_vendedor = 'id_rol_vendedor';
   export const url_validar_token = 'http://localhost:5001/validar-token';
   export const arg_token = 'token';
   export const arg_rol_token = 'rol';
+  export const urlCorreo = 'http://localhost:5000/email';
+  export const hashNotificacion = 'ABC123';
 }

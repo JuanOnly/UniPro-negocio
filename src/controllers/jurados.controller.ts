@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,23 +8,24 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Jurados} from '../models';
 import {JuradosRepository} from '../repositories';
 
+@authenticate('admin') //@authenticate.skip()
 export class JuradosController {
   constructor(
     @repository(JuradosRepository)
-    public juradosRepository : JuradosRepository,
+    public juradosRepository: JuradosRepository,
   ) {}
 
   @post('/jurados')
@@ -52,9 +54,7 @@ export class JuradosController {
     description: 'Jurados model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Jurados) where?: Where<Jurados>,
-  ): Promise<Count> {
+  async count(@param.where(Jurados) where?: Where<Jurados>): Promise<Count> {
     return this.juradosRepository.count(where);
   }
 
@@ -106,7 +106,8 @@ export class JuradosController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Jurados, {exclude: 'where'}) filter?: FilterExcludingWhere<Jurados>
+    @param.filter(Jurados, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Jurados>,
   ): Promise<Jurados> {
     return this.juradosRepository.findById(id, filter);
   }
