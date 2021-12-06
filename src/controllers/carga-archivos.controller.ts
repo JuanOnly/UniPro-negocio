@@ -21,14 +21,16 @@ import {
 import {
   DocumentoResultadoSolicitudRepository,
   DocumentoSolicitudRepository,
+  DocumentoTipoSolicitudRepository,
+  FotoProponenteTrabajoRepository,
 } from '../repositories';
 
 export class CargaArchivosController {
   constructor(
-    @repository(FotoProponenteTrabajo)
-    private fotoProponenteRepository: FotoProponenteTrabajo,
-    @repository(DocumentoTipoSolicitud)
-    private documentTipoSolicitudRepository: DocumentoTipoSolicitud,
+    @repository(FotoProponenteTrabajoRepository)
+    private fotoProponenteRepository: FotoProponenteTrabajoRepository,
+    @repository(DocumentoTipoSolicitudRepository)
+    private documentTipoSolicitudRepository: DocumentoTipoSolicitudRepository,
     @repository(DocumentoSolicitudRepository)
     private documentSolicitudRepository: DocumentoSolicitudRepository,
     @repository(DocumentoResultadoSolicitudRepository)
@@ -75,8 +77,8 @@ export class CargaArchivosController {
       if (nombre_archivo) {
         let foto = new FotoProponenteTrabajo();
         foto.id = id;
-        foto.nombre = nombre_archivo;
-        await this.fotoProponenteRepository.save(foto);
+        foto.name = nombre_archivo;
+        //await this.fotoProponenteRepository.save(foto);
         return {filename: nombre_archivo};
       }
     }
