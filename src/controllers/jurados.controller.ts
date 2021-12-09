@@ -49,6 +49,7 @@ export class JuradosController {
     return this.juradosRepository.create(jurados);
   }
 
+  @authenticate.skip()
   @get('/jurados/count')
   @response(200, {
     description: 'Jurados model count',
@@ -58,6 +59,7 @@ export class JuradosController {
     return this.juradosRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/jurados')
   @response(200, {
     description: 'Array of Jurados model instances',
@@ -95,6 +97,7 @@ export class JuradosController {
     return this.juradosRepository.updateAll(jurados, where);
   }
 
+  @authenticate.skip()
   @get('/jurados/{id}')
   @response(200, {
     description: 'Jurados model instance',

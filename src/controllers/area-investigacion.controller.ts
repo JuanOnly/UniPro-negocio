@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,29 +8,32 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {AreaInvestigacion} from '../models';
 import {AreaInvestigacionRepository} from '../repositories';
 
+@authenticate('admin') //@authenticate.skip()
 export class AreaInvestigacionController {
   constructor(
     @repository(AreaInvestigacionRepository)
-    public areaInvestigacionRepository : AreaInvestigacionRepository,
+    public areaInvestigacionRepository: AreaInvestigacionRepository,
   ) {}
 
   @post('/area-investigaciones')
   @response(200, {
     description: 'AreaInvestigacion model instance',
-    content: {'application/json': {schema: getModelSchemaRef(AreaInvestigacion)}},
+    content: {
+      'application/json': {schema: getModelSchemaRef(AreaInvestigacion)},
+    },
   })
   async create(
     @requestBody({
@@ -47,6 +51,7 @@ export class AreaInvestigacionController {
     return this.areaInvestigacionRepository.create(areaInvestigacion);
   }
 
+  @authenticate.skip()
   @get('/area-investigaciones/count')
   @response(200, {
     description: 'AreaInvestigacion model count',
@@ -58,6 +63,7 @@ export class AreaInvestigacionController {
     return this.areaInvestigacionRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/area-investigaciones')
   @response(200, {
     description: 'Array of AreaInvestigacion model instances',
@@ -95,6 +101,7 @@ export class AreaInvestigacionController {
     return this.areaInvestigacionRepository.updateAll(areaInvestigacion, where);
   }
 
+  @authenticate.skip()
   @get('/area-investigaciones/{id}')
   @response(200, {
     description: 'AreaInvestigacion model instance',
@@ -106,7 +113,8 @@ export class AreaInvestigacionController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(AreaInvestigacion, {exclude: 'where'}) filter?: FilterExcludingWhere<AreaInvestigacion>
+    @param.filter(AreaInvestigacion, {exclude: 'where'})
+    filter?: FilterExcludingWhere<AreaInvestigacion>,
   ): Promise<AreaInvestigacion> {
     return this.areaInvestigacionRepository.findById(id, filter);
   }
