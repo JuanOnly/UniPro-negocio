@@ -3,18 +3,17 @@ import {Entity, model, property} from '@loopback/repository';
 @model()
 export class Roles extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
     id: true,
     generated: true,
   })
-  id?: string;
+  id?: number;
 
   @property({
-    type: 'string',
+    type: 'number',
     required: true,
   })
-  nombre: string;
-
+  nombre: number;
 
   constructor(data?: Partial<Roles>) {
     super(data);

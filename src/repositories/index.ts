@@ -19,3 +19,5 @@ export * from './documento-resultado-solicitud.repository';
 export * from './documento-solicitud.repository';
 export * from './documento-tipo-solicitud.repository';
 export * from './foto-proponente-trabajo.repository';
+export * from './roles.repository';
+export * from './usuario.repository';

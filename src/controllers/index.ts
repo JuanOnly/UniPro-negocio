@@ -18,3 +18,5 @@ export * from './tipo-comite.controller';
 export * from './tipo-solicitud.controller';
 export * from './tipo-vinculacion.controller';
 export * from './descargar-archivos.controller';
+export * from './roles.controller';
+export * from './usuario.controller';
